@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--Tom Select-->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+
+
+<h4 class="page-title">City Information</h4>
+
+
+<!--country and city select lists-->
+<form id="city-select-form" method="GET">   
+
+    <select id="countrySelect" name="country" class="dropdown-select" required>
+        <option value="" {% if not selected_country %}selected{% endif %}>-- Select a Country --</option>
+        <option value="United States">United States</option>
+        {% for c in countries %}
+            <option 
+                value="{{ c['country'] }}"
+                {% if c['country'] == selected_country %}selected{% endif %}
+            >
+                {{ c['country'] }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <style>
+    .hidden {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+    }
+    </style>
+
+    <div id="citySelectWrapper"
+        class="{% if selected_country %}visible{% else %}hidden{% endif %}">
+        <select id="citySelect" name="city" class="dropdown-select" required>
+            <option value="" {% if not selected_city_id %}selected{% endif %}>-- Select a City --</option>
+            {% for city in cities %}
+                <option value="{{ city['id'] }}" 
+                    {% if selected_city_id == city['id'] %}selected{% endif %}
+                >
+                    {{ city["city"] }} - {{ city["state"] }} - {{ city["latitude"] }}° latitude
+                </option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit" class="btn-primary" >Select City</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>  
+
+</form>
+
+
+<!--random city generator-->
+ <p class="centered-text">--OR--</p>
+
+<a href="/random_city">
+    <button id="random-city-button" type="button" class="btn-primary">Get Random City Info</button>
+</a>
+
+
+<!--all cities with google link for selected country-->
+    <p id="orText" style="display: none; " class="centered-text">--OR--</p>
+
+<div class="flush-top" id="actionWrapper" style="display: none; ">
+    <!-- <p class="centered-text">--OR--</p> -->
+    <button id="all-cities-button" type="button" class="btn-primary" onclick="hideCityInfo()">Info for All Cities of Selected Country</button>
+</div>
+
+
+<!--Hide the city info and city links cards when google table displayed-->
+<script>
+    function hideCityInfo() {
+        // Find the paragraph element by its unique ID
+        const cityInfoContainer = document.getElementById("city_info");       
+        const cityLinksContainer = document.getElementById("city_links");
+
+        // Hide the city info and city links cards when google table displayed
+        cityInfoContainer.style.display = "none";
+        cityLinksContainer.style.display = "none";
+    }
+</script>
+
+<div id="tableContainer"></div>
+
+<script>
+
+const countrySelectField = document.getElementById('countrySelect');
+const orText = document.getElementById('orText');
+const actionWrapper = document.getElementById('actionWrapper');
+const allCitiesButton = document.getElementById('all-cities-button');
+const container = document.getElementById('tableContainer');
+
+// 1. Show or hide the button based on the dropdown selection
+countrySelectField.addEventListener('change', function() {
+    if (this.value !== "") {
+        orText.style.display = 'block';
+        actionWrapper.style.display = 'block';
+    } else {
+        orText.style.display = 'none';
+        actionWrapper.style.display = 'none';
+        container.innerHTML = '';
+    }
+
+});
+
+// 2. Fetch data using the chosen country value
+allCitiesButton.addEventListener('click', function() {
+    const selectedCountry = countrySelectField.value;
+    
+    if (!selectedCountry) return; // Guard clause 
+
+    container.innerHTML = '<p>Loading data...</p>';
+
+    // Pass the country as a URL query parameter
+    fetch(`/api/cities-for-google?country=${encodeURIComponent(selectedCountry)}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p>No city data found for this country.</p>';
+                return;
+            }
+
+            const table = document.createElement('table');
+            const thead = document.createElement('thead');
+            const tbody = document.createElement('tbody');
+
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = `
+                <th>AI Summary</th>    
+                <th>City</th>
+                <th>State</th>
+                <th>Population</th>
+                <th>Google Search</th>
+            `;
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+   
+                // Use encodeURIComponent to make sure cities with spaces (e.g., "New York") don't break the URL
+                const queryCity = encodeURIComponent(item.city);
+                const queryState = encodeURIComponent(item.state);
+                const queryCountry = encodeURIComponent(selectedCountry);
+                const cityId = encodeURIComponent(item.id);
+                
+                row.innerHTML = `
+                    <td>
+                        <a href="/city-summary/${cityId}">
+                            AI Summary
+                        </a>
+                    </td>      
+                    <td>${item.city}</td>
+                    <td>${item.state}</td>
+                    <td>${item.population}</td>
+                    <td>
+                        <a href="https://google.com/search?q=${queryCity}+${queryState}+${queryCountry}" target="_blank">
+                            Google
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            container.appendChild(table);
+            
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            container.innerHTML = `<p style="color: red;">Failed to load data: ${error.message}</p>`;
+        });
+});
+</script>
+
+
+<!--Page loading text-->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <p>🌎 Loading city info 🌎</p>
+    </div>
+</div>
+
+
+
+{% if selected_city %}
+<div id="city_info" class="card">
+    <h3>City Information</h3>
+
+    <p><strong>City:</strong> {{ selected_city }}</p>
+    <p><strong>Country-State:</strong> {{ selected_country }} - {{ selected_state }}</p>
+    <p><strong>Population:</strong> {{ population  }}</p>
+    <p><strong>Latitude:</strong> {{ latitude  }}</p>
+    <p><strong>Longitude:</strong> {{ longitude  }}</p>
+    {% if sunrise and sunset %}
+        <p><strong>Sunrise:</strong> {{ sunrise }}</p>
+        <p><strong>Sunset:</strong> {{ sunset }}</p>
+    {% endif %}
+</div>
+{% endif %}
+
+
+{% if selected_city_id or google_url or wiki_url %}
+
+<div id="city_links" class="card">
+    <h3>City Links</h3>
+
+    <!--ai city summary-->
+    {% if selected_city_id %}
+    <p>
+        <a href="/city-summary/{{ selected_city_id }}">
+            View AI Summary
+        </a>
+    </p>
+    {% endif %}
+
+    {% if google_url %}
+    <p>
+        <a href="{{ google_url }}" target="_blank">
+            Search Google
+        </a>
+    </p>
+    {% else %}
+        <p>Google data unavailable</p>
+    {% endif %}
+
+    {% if wiki_url %}
+    <p>
+        <a href="{{ wiki_url }}" target="_blank">
+            View Wikipedia page
+        </a>
+    </p>
+    {% else %}
+        <p>Wikipedia data unavailable</p>
+    {% endif %}
+
+    {% if selected_city_id %}
+    <p>
+        <a href="/city_map?id={{ selected_city_id }}">
+            View City on Map
+        </a>
+    </p>
+    {% else %}
+       <p>Map data unavailable</p> 
+    {% endif %}
+
+</div>
+{% endif %}
+
+
+
+<script>
+
+const citySelectTS = new TomSelect("#citySelect", {
+    maxOptions: null
+});
+
+const citySelectWrapper = document.getElementById("citySelectWrapper");
+const countrySelect = document.getElementById("countrySelect");
+
+countrySelect.addEventListener("change", function () {
+
+    if (!this.value) {
+        citySelectWrapper.style.display = "none";
+        citySelectTS.clear();
+        citySelectTS.clearOptions();
+        return;
+    }
+
+    fetch("/api/cities?country=" + encodeURIComponent(this.value))
+        .then(response => response.json())
+        .then(cities => {
+
+            citySelectTS.clear();
+            citySelectTS.clearOptions();
+
+            cities.forEach(city => {
+                citySelectTS.addOption({
+                    value: `${city.id}`,
+                    text: `${city.city} - ${city.state} - ${city.latitude}° latitude`
+                });
+            });
+
+            citySelectTS.refreshOptions(false);
+
+            citySelectWrapper.style.display = "block";  // show it now that it's populated
+
+        });
+
+});
+</script>
+
+
+<!--Page loading text for normal select city-->
+<script>
+document.getElementById("city-select-form").addEventListener("submit", function () {
+
+    document.getElementById("loadingOverlay").style.display = "block";
+
+});
+</script>
+
+<!--Page loading text for random select city-->
+<script>
+document.getElementById("random-city-button").addEventListener("click", function () {
+
+    document.getElementById("loadingOverlay").style.display = "block";
+
+});
+</script>
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}

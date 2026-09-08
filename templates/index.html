@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h4 class="page-title">Welcome to the Airport and City Explorer App!</h4>
+
+<p>This is an app to explore airports and cities from around the world.
+    <br>Pages are organized by airport or city features.
+    <br>See below for features and page instructions.
+</p>
+<!--Page intros-->
+<div class="card">
+<details>
+    <summary>Page Features</summary>
+    <ul>
+        <li>Airport Info:</li>
+            <ul>
+                <li>View details for an airport in the world.</li>
+                <li>Details include: latitude, longitude, temperature.</li>
+                <li>View details for random airport.</li>
+                <li>View an AI generated summary of the airport</li>
+                <li>Open a google search for the airport</li>
+                <li>Open the Wikipedia page for the airport</li>
+                <li>View the airport on a world map</li>
+            </ul><br>
+        <li>Airport Map:</li>
+            <ul>
+                <li>View all world's airport on a map.</li>
+                <li>View details of an airport.</li>       
+            </ul><br>
+        <li>Airport List:</li>
+            <ul>
+                <li>View a list of airports for a country.</li>
+                <li>View an AI generated summary of the airport.</li>
+                <li>Open a google search for the airport.</li>
+            </ul><br>
+        <li>City Info:</li>
+            <ul>
+                <li>View details for a selected city in the world.</li>
+                <li>Generate details for random city.</li>
+                <li>Details include: population, latitude, longitude, sunrise and sunset times.</li>
+                <li>View an AI generated summary of the airport.</li>
+                <li>Open a google search for the airport.</li>
+                <li>Open the Wikipedia page for the airport.</li>
+                <li>View the airport on a world map.</li>
+                <li>View a list of cities for a country, including AI summary and google search.</li>
+            </ul><br>
+        <li>City Map:</li>
+            <ul>
+                <li>View all world's cities on a map.</li>
+                <li>View details of a city.</li>
+            </ul><br>
+        <li>Similar Latitude Cities:</li>
+            <ul>
+                <li>View cities within a specified latitude range of a city.</li>
+                <li>View cities on a map.</li>
+            </ul><br>
+        <li>Latitude Rank Cities:</li>
+            <ul>
+                <li>View a country's cities with >100k population, ranked by latitude.</li>
+            </ul><br>
+        <li>Cities in Latitude Range:</li>
+            <ul>
+                <li>View cities within latitude range of selected latitude.</li>
+            </ul><br>
+        <li>City Distances:</li>
+            <ul>
+                <li>Calculate the distance between two cities.</li>
+            </ul>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--Airport Info page instructions-->
+<div class="card">
+<details>
+    <summary>Airport Info page instructions</summary>
+    <ul>
+        <li>Filter first by country, then select or type to find an airport.</li>
+        <li>Once an airport is selected, airport data will display.</li>
+        <li>Generate Random Airport: displays details about a random airport.</li>
+        <li>View AI Summary: displays AI generated airport summary.</li>
+        <li>Search Google: opens Google search of airport.</li>
+        <li>View Wikipedia page: opens Wikipedia page of airport.</li>
+        <li>View on Map: displays airport on world map.</li>
+        <li>Busiest Routes and Airlines and Destinations data is sourced from current airport Wikipedia page.</li>
+        <li>Busiest Routes displays passenger volume for prior year.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--airport map page instructions-->
+<div class="card">
+<details>
+    <summary>Airport Map page instructions</summary>
+    <ul>
+        <li>Zoom in or click on cluster circles to view an airport.</li>
+        <li>View Airport Info: links to Airport Info page for that airport.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--Airport List page instructions-->
+<div class="card">
+<details>
+    <summary>Airport List page instructions</summary>
+    <ul>
+        <li>Select country to view all airports.</li>
+        <li>AI Summary: displays AI generated summary of airport.</li>
+        <li>Google: opens a Google search of the airport.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--city info page instructions-->
+<div class="card">
+<details>
+    <summary>City Info page instructions</summary>
+    <ul>
+        <li>Filter first by country, then select or type to find a city.</li>
+        <li>Once Select City is clicked, city info will display.</li>
+        <li>Get Random City Info: displays info for random city.</li>
+        <li>After country is selected,  will display.</li>
+        <li>Info for All Cities of Selected Country: displays all cities for country.</li>
+        <li>All cities table has AI Summary and Google.</li>
+        <li>View AI Summary: displays AI generated summary of city.</li>
+        <li>Search Google: opens Google search for city.</li>
+        <li>View Wikipedia page: opens Wikipedia page for city.</li>
+        <li>View City on Map: displays city on world map.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+
+<!--City Map page instructions-->
+<div class="card">
+<details>
+    <summary>City Map page instructions</summary>
+    <ul>
+        <li>Zoom in or click on cluster circles to view an airport.</li>
+        <li>View City Info: links to Airport Info page for that airport.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--Similar Latitude Cities page instructions-->
+<div class="card">
+<details>
+    <summary>Similar Latitude Cities page instructions</summary>
+    <ul>
+        <li>Select country. Then select or type to find city.</li>
+        <li>Enter latitude range from 0-5 degrees.</li>
+        <li>After Find Cities is clicked a list of cities with >100k population within the latitude range will display.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--Latitude Rank Cities page instructions-->
+<div class="card">
+<details>
+    <summary>Latitude Rank Cities page instructions</summary>
+    <ul>
+        <li>Select country, then list of cities >100k population will display.</li>
+        
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--Cities in Latitude Range page instructions-->
+<div class="card">
+<details>
+    <summary>Cities in Latitude Range page instructions</summary>
+    <ul>
+        <li>Select latitude and latitude range.</li>
+        <li>After Find Cities is clicked, cities >10k population within latitude range will display.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+<!--City Distances page instructions-->
+<div class="card">
+<details>
+    <summary>City Distances page instructions</summary>
+    <ul>
+        <li>Select or type to find two cities.</li>
+        <li>Calculate Distance will display the miles between the cities.</li>
+    </ul>    
+</details>
+</div>
+<br>
+
+
+{% endblock %}
+

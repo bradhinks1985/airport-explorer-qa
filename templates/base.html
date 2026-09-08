@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mobile PWA</title>
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+
+<!-- This links your HTML page to your external stylesheet -->
+<link rel="stylesheet" href="/static/style.css">
+
+<!--PWA-->
+<link rel="manifest" href="/static/manifest.json">
+<meta name="theme-color" content="#1f4e79">
+
+
+
+</head>
+<body>
+
+
+
+    
+<!--MENU NAV-->
+
+<!-- The clickable mobile menu icon button -->
+<button id="menuButton" type="button" aria-label="Toggle Menu">☰</button>
+
+<!-- Slide-Out Navigation Drawer Drawer -->
+<nav id="navLinks">
+
+    <!-- Close Button inside the drawer -->
+  <button id="closeMenuButton" type="button">✕ Close Menu</button>
+
+  <!-- Block Stack of Menu Items -->
+  <a href="/">Home</a>
+  <a href="/airport_info">Airport Info</a>
+  <a href="/airport_map">Airport Map</a>
+  <a href="/airport_list">Airport List</a>
+  <a href="/city_info">City Info</a>
+  <a href="/city_map">City Map</a>
+  <a href="/cities_similar_latitude">Similar Latitude Cities</a>
+  <a href="/cities_by_latitude">Latitude Rank Cities</a>
+  <a href="/latitude_city_finder">Cities in Latitude Range</a>
+  <a href="/city_distance">City Distances</a>
+
+</nav>
+
+<!-- Invisible background screen overlay (Tapping this closes the drawer) -->
+<div id="menuOverlay"></div>
+
+
+<!-- Main dynamic body content placeholder -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+
+
+
+    <!-- The ONE single place you load your shared script -->
+    <script src="{{ url_for('static', filename='global.js') }}"></script>
+
+</body>
+</html>

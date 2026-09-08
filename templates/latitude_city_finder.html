@@ -1,0 +1,90 @@
+<!-- Cities by Latitude -->
+ <!-- features: table of cities sorted by country, latitude -->
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+ 
+
+
+<h4 class="page-title">Cities within Latitude Range</h4>
+
+<!-- Within degrees of selected latitude text field; must be positive number <= 5 -->
+ <form action="/latitude_city_finder" method="GET">
+    
+    <label for="latitudes">Select latitude</label><br>
+    <select name="latitudes" class="dropdown-select" required>
+        {% for lat in latitudes %}
+            <option 
+                value="{{ lat }}"
+                {% if lat == selected_latitude %}selected{% endif %}
+            >
+                {{ lat }}
+            </option>
+
+        {% endfor %}
+    </select>
+
+    <div>
+    <br><label for="degrees">Enter latitude range (0 to 5°):</label><br>
+    <input 
+        type="number" 
+        class="dropdown-select" 
+        id="degrees" 
+        name="degrees" 
+        min="0" 
+        max="5" 
+        step="0.01"
+        value="{{ selected_degrees if selected_degrees is not none else '' }}" 
+        required
+    >
+    <br>
+    <button type="submit" class="btn-primary">Find Cities</button>
+    </div>
+
+</form>
+
+
+<!-- table structure for display of cities by country and latitude -->
+{% if cities %}
+<p>
+    Cities between {{ lat_min }}° and {{ lat_max }}° latitude.<br>Cities >10k population.<br>Sorted by country then population.
+</p>
+
+<table border="1">
+    
+    <tr>
+        <th>City</th>
+        <th>State</th>
+        <th>Country</th>
+        <th>Latitude</th>
+        <th>Population</th>
+    </tr>
+
+    {% for city in cities %}
+
+    <tr>
+        <td>{{ city["city"] }}</td>
+        <td>{{ city["state"] }}</td>
+        <td>{{ city["country"] }}</td>
+        <td>{{ city["latitude"] }}</td>
+        <td>{{ city["population"] }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+{% else %}
+    <p>No cities within selected latitude range.</p>
+    
+{% endif %}
+
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}

@@ -1,0 +1,120 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="summary-page" data-city-id="{{ city_id }}"></div>
+
+<h4 class="page-title">AI City Summary</h4>
+
+<!-- <div id="summary-loading">
+    Loading city summary...
+</div> -->
+
+<!--Page loading text-->
+<div id="loadingOverlay" >
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <p>🌎 Loading AI city summary 🌎</p>
+    </div>
+</div>
+
+
+<!--Summary display with one card per topic-->
+
+<div id="summary-content" style="display: none;">
+
+    <div class="card">
+        <h3>Location</h3>
+        <p id="location"></p>
+    </div>
+
+    <div class="card">
+        <h3>Demographics</h3>
+        <p id="demographics"></p>
+    </div>
+
+    <div class="card">
+        <h3>History</h3>
+        <p id="history"></p>
+    </div>
+
+    <div class="card">
+        <h3>Culture</h3>
+        <p id="culture"></p>
+    </div>
+
+    <div class="card">
+        <h3>Climate</h3>
+        <p id="climate"></p>
+    </div>
+
+    <div class="card">
+        <h3>Facts</h3>
+        <p id="facts"></p>
+    </div>
+
+</div>
+
+
+<div id="summary-error" style="display: none;">
+    Unable to load city summary.
+</div>
+
+<script src="{{ url_for('static', filename='js/city_summary.js') }}"></script>
+
+
+
+<script>
+    const summaryPage = document.getElementById("summary-page");
+    const cityId = summaryPage.dataset.cityId;
+
+    fetch(`/api/city-summary/${cityId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("API request failed");
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            document.getElementById("location").textContent =
+                data.location || "";
+
+            document.getElementById("demographics").textContent =
+                data.demographics || "";
+
+            document.getElementById("history").textContent =
+                data.history || "";
+
+            document.getElementById("culture").textContent =
+                data.culture || "";
+
+            document.getElementById("climate").textContent =
+                data.climate || "";
+
+            document.getElementById("facts").textContent =
+                data.facts || "";
+
+            document.getElementById("loadingOverlay").style.display = "none";
+
+            document.getElementById("summary-content").style.display = "block";
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            document.getElementById("loadingOverlay").style.display = "none";
+
+            document.getElementById("summary-error").style.display = "block";
+        });
+</script>
+
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}

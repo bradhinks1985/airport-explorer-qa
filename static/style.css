@@ -1,0 +1,505 @@
+/* ==========================================================================
+   1. GLOBAL / BASE STYLES (Applies to all devices)
+   ========================================================================== */
+
+
+/* Hide the back button by default on desktop */
+.back-btn {
+  display: none;
+}
+
+   /* 1. Force the entire page layout background and edge margins */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0 24px;
+  background-color: #d3e1f7;
+  box-sizing: border-box;
+}
+
+/* 2. UNIVERSAL FONT LOCK: Forces buttons, cards, selects, and text strings 
+   to inherit the exact same clean typography, blocking plugin overrides */
+*,
+body, 
+.card, 
+button, 
+input, 
+select, 
+textarea, 
+.btn-primary, 
+.btn-secondary,
+.ts-control,
+.ts-dropdown .option { 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* 3. Ensure global layout model sizing calculations remain safe */
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* page background color */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0 24px; 
+  background-color: #d3e1f7;
+  box-sizing: border-box;
+}
+
+
+/* Force cards, bodies, and text layouts to use a clean modern sans-serif */
+body, .card {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* CRITICAL: Overrides native browser defaults to unify button and form typography */
+button, input, select, textarea, .btn-primary {
+  font-family: inherit; /*This forces elements to copy the parent font family*/
+} 
+
+/* page loading text style */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    /* background: rgb(253, 252, 252); */
+    z-index: 9999;
+}
+
+/* --- Updated: The White Background Container Box --- */
+.loading-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  
+  /* Core Box Container Styling */
+  background-color: #ffffff; /* Solid white box container background */
+  padding: 30px 40px;        /* Generous internal spacing around spinner and text */
+  border-radius: 16px;       /* Smooth rounded corners matching modern mobile apps */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Deep shadow for a floating card effect */
+  
+  /* Responsive Width Constraints */
+  width: 90%;                /* Stretches to fill full screen rows on small phones */
+  max-width: 320px;          /* Prevents the container box from getting too wide on desktop */
+  box-sizing: border-box;
+}
+
+.loading-box p {
+  font-family: inherit;
+  font-size: 16px;       /* Desktop optimized font size */
+  font-weight: 500;       /* Medium bold weight so it stands out on the screen */
+  color: #333333;         /* Soft charcoal color for readability */
+  margin-top: 12px;       /* Adds a clean space gap beneath your rotating spinner */
+  line-height: 1.4;
+}
+
+/* --- Global Tom Select Dropdown Touch Adjustments --- */
+
+/* 1. Force the dropdown menu panel to scroll with touch momentum on phones */
+.ts-dropdown .ts-dropdown-content {
+  max-height: 200px !important;    /* Forces a ceiling cap height so a scrollbar manifests */
+  overflow-y: auto !important;     /* Guarantees vertical scrolling remains active */
+  -webkit-overflow-scrolling: touch; /* Smooth kinetic scrolling for iOS/Safari thumbs */
+}
+
+/* 2. Prevent parent page containers from clipping the dropdown layer */
+.card, 
+form, 
+.select-container {
+  /* If any container on your distances page has 'overflow: hidden', it cuts off the menu */
+  overflow: visible !important; 
+}
+
+/* 3. Elevate the dropdown list layer above mobile layout stacks */
+.ts-dropdown {
+  position: absolute !important;
+  z-index: 10000 !important;       /* Places it cleanly over buttons or tables */
+}
+
+
+/* ==========================================================================
+   2. DESKTOP COMPONENTS (Default layout for large screens)
+   ========================================================================== */
+
+   /* --- Hide the Mobile Close Button on Desktop Screens --- */
+#closeMenuButton {
+  display: none; /* Invisible and takes up zero layout space on desktop views */
+}
+
+/* --- Layout & Typography --- */
+.page-title { font-size: 25px; color: #111; }
+.section-title { font-size: 20px; color: #333; }
+
+/* Clean white background text block */
+.text-container-box {
+  background-color: #ffffff; /* Solid white background color */
+  padding: 4px;             /* Generous internal spacing around the text */
+  border-radius: 8px;        /* Smooth, subtle rounded corners matching your cards */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Soft baseline shadow for depth */
+  border: 1px solid #e2e8f0; /* Optional: Very light gray outline for definition */
+  margin-bottom: 5px;       /* Spacing below the box before the next page element */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Ensure the text inside remains legible */
+.text-container-box a {
+  margin: 0;                /* Resets default browser paragraph gaps */
+  font-size: 15px;
+  line-height: 1.6;          /* Increases line height for easy reading */
+  color: #333333;            /* Soft charcoal text (easier on eyes than pure black) */
+}
+
+
+/* --- MENU NAV --- */
+#menuButton { display: none; } /* Hidden on desktop */
+#navLinks { display: flex; gap: 20px; }
+
+
+/* --- CARDS --- */
+.card { background: rgb(255, 255, 255); padding: 24px; border-radius: 8px; margin-bottom: 16px; max-width: 1000px; width: 100%;
+    /* Creates elevation depth without ugly hard solid borders */
+   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 8px 16px -6px rgba(0, 0, 0, 0.05),
+              0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.card-header { font-weight: bold; border-bottom: 1px solid #eee; }
+.info-row { display: flex; justify-content: space-between; margin: 8px 0; }
+
+/* Style the summary header box inside your card */
+.card details summary {
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: bold; 
+  color: #1a1a1a;    /* Dark charcoal accent */
+  padding: 12px 8px;
+  cursor: pointer;   /* Changes mouse arrow to a hand pointer */
+  user-select: none; /* Prevents text from being accidentally highlighted on double taps */
+  transition: color 0.2s ease;
+}
+
+/* Changes the text color slightly when a user hovers over it */
+.card details summary:hover {
+  color: #0066cc; /* Matches your brand blue */
+}
+
+/* Focus indicator for keyboard accessibility */
+.card details summary:focus {
+  outline: none;
+  color: #0066cc;
+}
+
+
+/* --- BUTTONS --- */
+.btn-primary { background: #0066cc; color: white; width: 100%; max-width: 300px; padding: 10px 20px; border-radius: 6px; margin-bottom: 16px; 
+    font-size: 14px !important; 
+    font-weight: bold !important; 
+    text-decoration: none;
+}
+.btn-secondary { background: #e2e8f0; color: #333; width: 100%; max-width: 300px; padding: 10px 20px; border-radius: 6px; }
+
+
+/* --- DROPDOWNS AND SEARCH FIELDS: Unifying Tom Select & Normal Dropdowns --- */
+
+/* 1. Outer Layout Containers (Aligns them side-by-side and controls overall width) */
+.select-container, 
+.ts-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  max-width: 400px; /* Forces both layouts to cap at the exact same width */
+  box-sizing: border-box;
+}
+
+/* 2. Core Inputs (Forces them to fill the container and sets identical sizing) */
+/* .dropdown-select,  */
+.ts-control {
+  width: 100% !important;
+  max-width: 400px;
+  font-size: 14px;
+  line-height: 20px !important; /* Locks the exact text bounding box height */
+   padding-top: 10px !important;  /*Uniform top padding */
+   padding-bottom: 10px !important; /*Uniform bottom padding */
+   box-sizing: border-box !important; 
+ } 
+
+.dropdown-select {
+    width: 100%;
+    max-width: 400px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* .dropdown-select,
+.ts-control {
+    width: 100% !important;
+    max-width: 400px;
+    font-size: 14px;
+    box-sizing: border-box !important;
+} */
+
+/* 3. Tom Select Sub-Element Reset (Ensures internal search text matches) */
+.ts-control input {
+  line-height: 20px !important;
+  padding: 0 !important;
+}
+
+
+
+/* --- TABLES --- */
+th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+
+table {
+  width: 100%;
+  background-color: #ffffff; /* Sets complete white background for the whole table */
+  border-collapse: collapse; /* Collapses double cell borders into crisp single lines */
+  margin: 16px 0;
+}
+
+/* Apply a solid black border to the outside boundary and internal cells */
+table, 
+th, 
+td {
+  border: 1px solid #000000; /* Crisp black borders */
+}
+
+/* --- The Grey Table Header Styling --- */
+th {
+  background-color: #f1f5f9; /* Modern, clean light grey color */
+  color: #111111;            /* Dark text for excellent reading contrast */
+  font-weight: 700;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #000000; /* Distinct line below the header */
+}
+
+
+
+
+
+
+
+/* ==========================================================================
+   3. MOBILE OVERRIDES (Applies ONLY to screens 768px and smaller)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+.centered-text {
+  text-align: center;
+}
+
+  .back-btn1 {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+  }
+
+  .back-btn2 {
+  position: fixed;   /* Anchors the element relative to the mobile viewport*/
+  bottom: 20px;      /*Spacing distance from the bottom edge of the screen*/
+   left: 20px;       /* Spacing distance from the left edge of the screen */
+   z-index: 99999 !important;   /* Forces the button to stay stacked on top of all other page elements */
+  
+  /* Optional mobile-friendly touch targets styling  */
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #ffffff;
+  color: #333333;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+ } 
+
+.back-btn {
+  display: inline-block; /* CRITICAL: Gives the fixed element structural layout dimensions */
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 99999 !important;
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #ffffff; /* Dark gray button body */
+  color: #333333 !important; /* Forces text to show as white */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+
+body {
+  /* Adds extra blank scrolling space at the very bottom so content clears the fixed button */
+  padding-bottom: 80px; 
+}
+
+    /* 1. Ensure the parent container applies equal padding on both sides */
+  body, 
+  .app-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  
+  /* --- Layout & Typography --- */
+  .page-title { font-size: 24px; }
+  .section-title { font-size: 18px; }
+
+
+  /* --- Menu & Navigation --- */
+  /* --- The Burger Menu Icon Button --- */
+  #menuButton {
+    display: block;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* --- Amazon Style Slide-Out Sidebar Navigation --- */
+  #navLinks {
+    display: flex;
+    flex-direction: column;
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100000;
+    
+    width: 50vw;
+    min-width: 240px;
+    background-color: #232f3e;
+    padding-top: 20px;
+    box-sizing: border-box;
+    
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+
+    overflow-y: auto !important;          /* 1. Forces a scrollbar if menu links exceed screen height */
+    -webkit-overflow-scrolling: touch;   /* 2. Restores smooth kinetic swipe momentum for mobile fingers */
+    padding-bottom: 60px !important;     /* 3. Generous bottom safety bumper so text never sits flush against the bezel */
+  }
+
+  /* --- Activated State: Slides the menu into view --- */
+  #navLinks.show {
+    transform: translateX(0); /* Snaps position smoothly back to left-edge boundary */
+  }
+
+  /* --- Navigation Stack Links (Individual Rows) --- */
+  #navLinks a {
+    display: block;
+    padding: 16px 24px;     /* Touch-friendly target height padding rows */
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;         /* Crisp white text against dark theme background */
+    text-decoration: none;
+    border-bottom: 1px solid #3a4b5f; /* Clean divider line rows */
+  }
+
+  #navLinks a:active {
+    background-color: #3a4b5f; /* Instant tap touch color feedback row */
+  }
+
+  /* Inside-Drawer Close Layout Control Row Button */
+  #closeMenuButton {
+    display: block !important; /* Overrides the desktop hide command on small phone viewports */
+    background: none;
+    border: none;
+    color: #febd69;         /* Vibrant accent gold text tint */
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    padding: 12px 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+
+  /* --- Background Dimming Screen Overlay Canvas --- */
+  #menuOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dimmed dark wash tint */
+    z-index: 99999;         /* Placed immediately underneath the sidebar drawer */
+    display: none;          /* Hidden away completely until activated by tap actions */
+  }
+  
+  #menuOverlay.show {
+    display: block;         /* Manifests background screen mask block array */
+  }
+
+
+
+  /* --- CARDS --- */
+        /* .card { padding: 16px; } */
+        /* 2. Reset card widths so they snap securely inside those margins */
+  .card {
+    width: 100% !important;        /* Fills the safe space between margins smoothly */
+    max-width: 100% !important;    /* Prevents desktop size limits from locking it up */
+    margin-left: 0 !important;     /* Clears out asymmetrical alignments */
+    margin-right: 0 !important;
+    padding: 16px !important;      /* Equal internal breathing room for cards */
+    box-sizing: border-box !important; /* CRITICAL: Includes padding inside the width */
+  }
+  .info-row { flex-direction: column; } /* Stack key/value pairs vertically */
+
+  /* --- BUTTONS --- */
+ 
+   /* 1. First, make sure the link wrapper doesn't lock the button to the left */
+  .btn-wrapper {
+    display: block !important;
+    width: 100% !important;
+    max-width: 320px !important; /* Limits width so it doesn't look stretched on large phones */
+    margin-left: auto !important;  /* These two auto rules center the button block */
+    margin-right: auto !important; /* perfectly in the middle of the phone screen */
+    margin-bottom: 16px !important; /* Adds space between your two buttons */
+    text-decoration: none;
+  }
+
+  /* 2. Style the actual buttons and force the text to center mathematically */
+  .btn-primary, 
+  .btn-secondary {
+    display: flex !important;          /* CRITICAL: Enables centering mechanics */
+    align-items: center !important;     /* Centers text vertically */
+    justify-content: center !important; /* Centers text horizontally */
+    text-align: center !important;     /* Fallback text alignment override */
+    
+    width: 100% !important;            /* Fills out the 320px block container */
+    max-width: 320px !important;       /* Matches form button to wrapper button */
+    margin-left: auto !important;      /* Centers the form-based button */
+    margin-right: auto !important;
+    
+    /* Your sizing and typography preferences */
+    font-size: 15px !important; 
+    font-weight: 700 !important; 
+    min-height: 52px !important; 
+    padding: 14px 28px !important; 
+    border-radius: 12px !important;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:active { transform: scale(0.98); }
+
+
+  /* --- Search & Form Inputs (Tom Select) --- */
+  .ts-control, .ts-control input, .ts-dropdown .option { font-size: 16px !important; } /* Prevents iOS auto-zoom */
+
+
+
+  
+
+
+} 

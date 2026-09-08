@@ -1,0 +1,98 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="summary-page" data-iata="{{ iata }}"></div>
+
+<h4 class="page-title">AI Airport Summary</h4>
+
+<!-- <div id="summary-loading">
+    Loading city summary...
+</div> -->
+
+<!--Page loading text-->
+<div id="loadingOverlay" >
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <p>✈️ Loading airport info ✈️</p>
+    </div>
+</div>
+
+
+
+<!--Summary display with one card per topic-->
+
+<div id="summary-content" style="display: none;">
+
+    <div class="card">
+        <h3>History</h3>
+        <p id="history"></p>
+    </div>
+
+    <div class="card">
+        <h3>Features</h3>
+        <p id="features"></p>
+    </div>
+
+    <div class="card">
+        <h3>Facts</h3>
+        <p id="facts"></p>
+    </div>
+
+</div>
+
+
+<div id="summary-error" style="display: none;">
+    Unable to load airport summary.
+</div>
+
+<script src="{{ url_for('static', filename='js/airport_summary.js') }}"></script>
+
+
+
+<script>
+    const summaryPage = document.getElementById("summary-page");
+    const iata = summaryPage.dataset.iata;
+
+    fetch(`/api/airport-summary/${iata}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("API request failed");
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            document.getElementById("history").textContent =
+                data.history || "";
+
+            document.getElementById("features").textContent =
+                data.features || "";
+
+            document.getElementById("facts").textContent =
+                data.facts || "";
+
+            document.getElementById("loadingOverlay").style.display = "none";
+
+            document.getElementById("summary-content").style.display = "block";
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            document.getElementById("loadingOverlay").style.display = "none";
+
+            document.getElementById("summary-error").style.display = "block";
+        });
+</script>
+
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+
+{% endblock %}

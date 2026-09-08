@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+  
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css">
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+
+<style>
+#map {
+    height: 800px;
+}
+</style>
+
+
+<h4>Airport Map</h4>
+
+<div id="map"></div>
+
+
+
+<!-- <script> -->
+// const cityData  = {{ cities | tojson }};
+
+
+<script id="city-data" type="application/json">
+{{ cities | tojson }}
+</script>
+
+<script>
+
+const cityData = JSON.parse(
+    document.getElementById("city-data").textContent
+);
+
+const map = L.map('map').setView([20,0],2);
+
+L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(map);
+
+
+let bounds = [];
+
+cityData.forEach(city => {
+
+    L.marker([
+        city.latitude,
+        city.longitude
+    ])
+    .addTo(map)
+    .bindPopup(`
+        <b>${city.city}</b><br>
+        ${city.state}<br>
+        ${city.country}
+    `);
+
+    bounds.push([
+        city.latitude,
+        city.longitude
+    ]);
+
+});
+
+
+if (bounds.length > 0) {
+    map.fitBounds(bounds);
+}
+
+
+
+</script>
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}
+

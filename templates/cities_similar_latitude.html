@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+  
+
+    <h4 class="page-title">Cities with Similar Latitudes</h4>
+
+<!-- form for selecting a city and specifying degrees of latitude other cities must be within of selected city -->
+<form action="/cities_similar_latitude" method="GET">
+
+    <select id="countrySelect" name="country" class="dropdown-select" required>
+        <option value="" {% if not selected_country %}selected{% endif %}>-- Select a Country --</option>
+        <option value="United States">United States</option>
+        {% for c in countries %}
+            <option 
+                value="{{ c[0] }}"
+                {% if c[0] == selected_country %}selected{% endif %}
+            >
+                {{ c[0] }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <style>
+    .hidden {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+    }
+    </style>
+
+    <div id="citySelectWrapper" 
+        class="{% if selected_country %}visible{% else %}hidden{% endif %}">
+        <select id="citySelect" name="city" required>
+            <option value="" {% if not selected_city %}selected{% endif %}>-- Select or Type to Find City --</option>
+            {% for city in cities %}
+                {% set combined_value = city['city'] ~ '|' ~ city['latitude'] %}
+                <option value="{{ combined_value }}" 
+                {% if selected_city == city['city'] and selected_latitude == city['latitude'] %}selected{% endif %} >
+                {{ city["city"] }} - {{ city["state"] }} {{ city["latitude"] }}° latitude
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
+
+    <br>
+    <div>
+    <!-- field to enter degrees of latitude cities should be within -->
+        <label for="degrees">Enter latitude range (0 to 5°):</label><br>
+        <input 
+            type="number" 
+            class="dropdown-select" 
+            id="degrees" 
+            name="degrees" 
+            min="0" 
+            max="5" 
+            step="0.01" 
+            value="{{ selected_degrees if selected_degrees is not none else '' }}"
+            required
+        >
+        <br>
+        <button type="submit" class="btn-primary">Find Cities</button>
+    </div>
+</form>    
+
+
+
+
+
+<!-- table structure for display of cities with similar latitude of selected city -->
+{% if similar_latitude_cities %}
+
+    <div class = "text-container-box">
+        <a href="/cities_same_latitude_map" >View These Cities on Map</a>
+    </div>
+
+    <!-- <table> -->   
+    <table border="1">
+    <br>
+
+    {% if lat_max and lat_min and selected_degrees %}
+        <p>
+            Cities with >100k population within {{ lat_max }} to {{ lat_min }} degrees latitude of {{ selected_city }}.
+        </p>
+    {% endif %}
+
+    <!-- <p>Sorted by country then population.</p> -->
+    <tr>
+        <th>City</th>
+        <th>State</th>
+        <th>Country</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Population</th>
+    </tr>
+
+    {% for city in similar_latitude_cities %}
+
+    <tr>
+        <td>{{ city["city"] }}</td>
+        <td>{{ city["state"] }}</td>
+        <td>{{ city["country"] }}</td>
+        <td>{{ city["latitude"] }}</td>
+        <td>{{ city["longitude"] }}</td>
+        <td>{{ city["population"] }}</td>
+    </tr>
+
+    {% endfor %}
+
+{% elif selected_country and not similar_latitude_cities %}
+
+    <p>No cities found within the specified latitude range.</p>  
+
+<!-- </table> -->
+{% endif %}
+
+
+<script>
+const citySelectTS = new TomSelect("#citySelect", {
+    create: false,
+    maxOptions: null
+});
+
+const citySelectWrapper = document.getElementById("citySelectWrapper");
+const countrySelect = document.getElementById("countrySelect");
+
+countrySelect.addEventListener("change", function () {
+
+    if (!this.value) {
+        citySelectWrapper.style.display = "none";
+        citySelectTS.clear();
+        citySelectTS.clearOptions();
+        return;
+    }
+
+    fetch("/api/cities?country=" + encodeURIComponent(this.value))
+        .then(response => response.json())
+        .then(cities => {
+
+            citySelectTS.clear();
+            citySelectTS.clearOptions();
+
+            cities.forEach(city => {
+                citySelectTS.addOption({
+                    value: `${city.city}|${city.latitude}`,
+                    text: `${city.city} - ${city.state} - ${city.latitude}° latitude`
+                });
+            });
+
+            citySelectTS.refreshOptions(false);
+
+            citySelectWrapper.style.display = "block";  // show it now that it's populated
+
+        });
+
+});
+</script>
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}

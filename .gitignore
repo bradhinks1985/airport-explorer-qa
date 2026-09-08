@@ -1,0 +1,35 @@
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables / secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# Temporary / development files
+*.tmp
+
+# Data files
+data/
+
+# Old development/debug files
+airport map html 7.28.2026.txt
+airport_info_dom_file.txt
+app_py 07.28.2026.txt
+cities similar latitude html 8.4.2026.txt
+city distance html 8.10.26.txt
+city info 8.5.2026.txt
+city info 8.6.2026.txt
+city info html 8.5.2026.txt
+index_html 7.28.2026.txt
+city_batch_input.jsonl
+airports_backup.db

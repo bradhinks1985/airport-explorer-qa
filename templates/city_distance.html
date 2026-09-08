@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+ 
+
+<!--Tom Select-->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+
+<br>
+<h4 class = "page-title">Distance Between Cities</h4>
+<p>Select two cities to calculate straight-line miles between them.<br>Cities >100k population.</p>
+
+
+
+
+
+<!--City selects-->
+<form id="calculate" action="/city_distance" method="GET">
+
+    <label for="city_1" style="font-weight: bold;">Select City 1</label>
+    <select id="city_1" name="city_1" class = "dropdown-select" required>
+            <option value="">-- Select or Type to Find City --</option>
+        {% for city in cities %}
+            <option value="{{ city['id'] }}"
+                {% if city['id'] == selected_city_1_id %}selected{% endif %}
+            >{{ city['country'] }} - {{ city['state'] }} - {{ city['city'] }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+    <label for="city_2" style="font-weight: bold;">Select City 2</label>
+    <select id= "city_2" name="city_2" class = "dropdown-select" required>
+            <option value="">-- Select or Type to Find City --</option>
+        {% for city in cities %}
+            <option value="{{ city['id'] }}"
+                {% if city['id'] == selected_city_2_id %}selected{% endif %}
+            >{{ city['country'] }} - {{ city['state'] }} - {{ city['city'] }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <button type="submit" class="btn-primary">Calculate Distance</button>
+</form>
+
+
+<!--Page loading text-->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <p>Calculating...</p>
+    </div>
+</div>
+
+
+<!--Distance calculation-->
+{% if distance %}
+<br>
+<div class = "text-container-box">
+    <p>
+        {{ distance }} miles between selected cities. 
+    </p>
+</div>    
+{% endif %}
+
+
+
+<!--Tom Select-->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+
+const citySelectTS1 = new TomSelect("#city_1", {
+    create: false,
+    maxOptions: null
+});
+
+const citySelectTS2 = new TomSelect("#city_2", {
+    create: false,
+    maxOptions: null
+});
+
+// new TomSelect("#city_1", {
+//     placeholder: "-- Select a City --",
+//     allowEmptyOption: true,
+//     maxOptions: null
+// });
+// new TomSelect("#city_2", {
+//     placeholder: "-- Select a City --",
+//     maxOptions: null
+// });
+
+</script>
+
+
+<!--Page loading text for normal select airport-->
+<script>
+document.getElementById("calculate").addEventListener("submit", function () {
+
+    document.getElementById("loadingOverlay").style.display = "block";
+
+});
+</script>
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}

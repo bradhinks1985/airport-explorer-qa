@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+<h4 class="page-title">Airport Info</h4>
+
+
+
+
+<!--country and airport select lists-->
+<form id="airport-search-form" method="GET">
+
+
+    <select id="countrySelect" name="country" class="dropdown-select" required>
+        <option value="" {% if not selected_country %}selected{% endif %}>-- Select a Country --</option>
+        <option value="United States">United States</option>
+        {% for c in countries %}
+            <option 
+                value="{{ c['country'] }}"
+                {% if c['country'] == selected_country %}selected{% endif %}
+            >
+                {{ c['country'] }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <style>
+    .hidden {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+    }
+    </style>
+
+    <div id="airportSelectWrapper"
+        class="{% if selected_country %}visible{% else %}hidden{% endif %}">
+        <select id="airportSelect" name="iata" required>
+            <option value="" {% if not selected_airport_lat_long %}selected{% endif %}>-- Select or Type to Find Airport --</option>
+            {% for airport in airports %}
+                <option 
+                    value="{{ airport['iata'] }}"
+                    {% if airport['iata'] == selected_iata %}selected{% endif %}
+                >
+                    {{ airport["city"] }} - {{ airport["airport_name"] }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- <button type="submit">Select Airport</button> -->
+        <br>
+        <button type="submit" class="btn-primary">
+            Select Airport
+        </button>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
+
+</form>
+
+
+<p class="centered-text">--OR--</p>
+
+<!-- Wrap this section in a container block -->
+<div style="margin-bottom: 20px;">
+    <!-- <div style="margin-bottom: 10px;">--OR--</div> -->
+    <a href="/random_airport" id="random-airport-button" class="btn-primary btn-wrapper" style="text-decoration: none; display: inline-block;"> Generate Random Airport </a>
+</div>
+
+<!--random airport generator-->
+<!-- Wrapper link styled as a block for a better hit area -->
+ <!-- <p class="centered-text">--OR--</p> -->
+
+<!-- <a href="/random_airport" class="btn-wrapper">
+  <button id="random-airport-button" type="button" class="btn-primary">
+    Generate Random Airport
+  </button>
+</a> -->
+<!-- 
+<a href="/random_airport"
+   id="random-airport-button"
+   class="btn-primary btn-wrapper" 
+   display: inline-block; 
+   margin-bottom: 20px;> 
+    Generate Random Airport
+</a> -->
+
+<!--Page loading text-->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <p>✈️ Loading airport info ✈️</p>
+    </div>
+</div>
+
+
+<!-- display of selected airport latitude and longitude -->
+{% if selected_airport_lat_long %}
+
+<div class="card">
+    <h3>Airport Information</h3>
+
+    <p><strong>Airport:</strong> {{ selected_airport_lat_long["airport_name"] }}</p>
+    <p><strong>City-Country:</strong> {{ selected_airport_lat_long["city"] }} - {{ selected_airport_lat_long["country"] }}</p>
+    <p><strong>Latitude:</strong> {{ selected_airport_lat_long["latitude"]  }}°</p>
+    <p><strong>Longitude:</strong> {{ selected_airport_lat_long["longitude"] }}°</p>
+    {% if airport_current_temp is not none %}
+        <p><strong>Temperature:</strong> {{ airport_current_temp }}°F</p>
+    {% else %}
+        Weather unavailable
+    {% endif %}
+</div>
+{% endif %}
+
+
+{% if google_url or selected_iata or wiki_url%}
+
+<div class="card">
+    <h3>Airport Links</h3>
+
+    <!--ai airport summary-->
+    {% if selected_iata %}
+    <p>
+        <a href="/airport-summary/{{ selected_iata }}">
+            View AI Summary
+        </a>
+    </p>
+    {% endif %}
+
+    {% if google_url %}
+    <p>
+        <a href="{{ google_url }}" target="_blank">
+            Search Google
+        </a>
+    </p>
+    {% else %}
+        <p>Google data unavailable</p>
+    {% endif %}
+
+    {% if wiki_url %}
+    <p>
+        <a href="{{ wiki_url }}" target="_blank">
+            View Wikipedia page
+        </a>
+    </p>
+    {% else %}
+        <p>Wiki data unavailable</p>
+    {% endif %}
+
+    {% if selected_iata %}
+    <a href="/airport_map?iata={{ selected_iata }}">
+        View on Map
+    </a>
+    {% else %}
+       <p>Map data unavailable</p> 
+    {% endif %}
+
+</div>
+{% endif %}
+
+
+
+<!-- collapsable displays of top destinations "busiest routes" for selected airport -->
+{%if top_destinations and top_destinations.domestic != 'No domestic routes found'%}
+<div class="card">
+    <details>
+    <summary>Busiest Domestic Routes</summary>
+    <table border="1">
+        {%if top_destinations.domestic == 'No domestic routes found' %}
+        <tr>
+            <td colspan="4">No domestic routes found</td>
+        </tr>
+        {% else %}
+            {% for row in top_destinations.domestic %}
+            <tr>
+                <td>{{ row.rank }}</td>
+                <td>{{ row.destination }}</td>
+                <td>{{ row.passengers }}</td>
+                <td>{{ row.airline }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </table>
+    </details>
+</div> 
+{% endif %}
+
+
+{%if top_destinations and top_destinations.international != 'No international routes found' %}
+<div class="card">
+    <details>
+    <summary>Busiest International Routes</summary>
+        <table border="1">
+        {% if top_destinations.international == 'No international routes found' %}
+        <tr>
+            <td colspan="4">No international routes found</td>
+        </tr>
+        {% else %}
+            {% for row in top_destinations.international %} 
+            <tr>
+                <td>{{ row.rank }}</td>
+                <td>{{ row.destination }}</td>
+                <td>{{ row.passengers }}</td>
+                <td>{{ row.airline }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </table>
+    </details>
+</div>    
+{%endif%}
+
+
+<!-- display of airlines and destinations for selected airport -->
+{% if airlines %}
+<div class="card">
+    <details>
+    <summary>Airlines and Destinations</summary>
+        {% if airlines %}
+
+            {% for airline, destinations in airlines.items() %}
+
+            <h3>{{ airline }}</h3>
+
+            <ul>
+                {% for destination in destinations %}
+                    <li>{{ destination }}</li>
+                {% endfor %}
+            </ul>
+
+            {% endfor %}
+
+        {% else %}
+            <p>No airline destination information found.</p>
+
+        {% endif %}
+    </details>
+</div>
+{% endif %} 
+
+
+<script>
+const airportSelectTS = new TomSelect("#airportSelect", {
+    create: false,
+    maxOptions: null
+});
+
+const airportSelectWrapper = document.getElementById("airportSelectWrapper"); 
+const countrySelect = document.getElementById("countrySelect");
+
+countrySelect.addEventListener("change", function () {
+    if (!this.value) {
+        // Switch classes cleanly to hide it
+        airportSelectWrapper.classList.remove("visible");
+        airportSelectWrapper.classList.add("hidden");
+        
+        airportSelectTS.clear();
+        airportSelectTS.clearOptions();
+        return;
+    }
+
+    fetch("/api/airports?country=" + encodeURIComponent(this.value))
+        .then(response => response.json())
+        .then(airports => {
+            airportSelectTS.clear();
+            airportSelectTS.clearOptions();
+            airports.forEach(airport => {
+                airportSelectTS.addOption({
+                    value: airport.iata,
+                    text: `${airport.city} - ${airport.airport_name}`
+                });
+            });
+            airportSelectTS.refreshOptions(false);
+            
+            // Switch classes cleanly to reveal it
+            airportSelectWrapper.classList.remove("hidden");
+            airportSelectWrapper.classList.add("visible");
+        });
+});
+</script>
+
+
+
+<!--Page loading text for normal select airport-->
+<script>
+document.getElementById("airport-search-form").addEventListener("submit", function () {
+
+    document.getElementById("loadingOverlay").style.display = "block";
+
+});
+</script>
+
+<!--Page loading text for random select airport-->
+<script>
+document.getElementById("random-airport-button").addEventListener("click", function () {
+
+    document.getElementById("loadingOverlay").style.display = "block";
+
+});
+</script>
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}
+

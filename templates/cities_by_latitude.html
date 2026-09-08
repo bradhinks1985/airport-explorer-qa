@@ -1,0 +1,68 @@
+<!-- Cities by Latitude -->
+ <!-- features: table of cities sorted by country, latitude -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+  
+<h4 class="page-title">Cities Ranked By Latitude</h4>
+
+<!-- country filter -->
+<form method="GET">
+
+    <select name="country" class="dropdown-select" required>
+        <option value="" {% if not selected_country %}selected{% endif %}>-- Select a Country --</option>
+        <option value="United States">United States</option>
+        {% for c in countries %}
+            <option 
+                value="{{ c['country'] }}"
+                {% if c['country'] == selected_country %}selected{% endif %}
+            >
+                {{ c['country'] }}
+            </option>
+        {% endfor %}
+    </select>
+    <br>
+    <button type="submit" class="btn-primary">Select Country</button>
+
+</form>
+
+<!-- table structure for display of cities by country and latitude -->
+{% if selected_country and cities %}
+<table border="1">
+    <p>Cities >100k population, sorted by latitude.</p>
+    
+    <tr>
+        <th>City</th>
+        <th>State</th>
+        <th>Country</th>
+        <th>Latitude</th>
+        <th>Population</th>
+    </tr>
+
+    {% for city in cities %}
+
+    <tr>
+        <td>{{ city["city"] }}</td>
+        <td>{{ city["state"] }}</td>
+        <td>{{ city["country"] }}</td>
+        <td>{{ city["latitude"] }}</td>
+        <td>{{ city["population"] }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+{% endif %}
+
+{% if selected_country and not cities %}
+    <p>No cities >100k population found.</p>
+{% endif %}
+
+
+<!--page back button for mobile-->
+<button onclick="safeBack()" class="back-btn">← Back</button>
+
+
+{% endblock %}
