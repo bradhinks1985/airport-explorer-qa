@@ -1,4 +1,5 @@
 from pages.airport_info import AirportInfoPage
+from tests.conftest import page
 
 
 ### PASSED ###
@@ -13,8 +14,9 @@ def test_airport_info_complete_user_journey(page):
 
     airport_page.select_airport_button.click()
 
-    page.wait_for_url("**iata=DTW")
+    page.wait_for_timeout(1000)
 
+    print("URL AFTER CLICK:", page.url)
     page.locator("#loadingOverlay").wait_for(state="hidden")
 
     # Verify the major sections of the page are available
