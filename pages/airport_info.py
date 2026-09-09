@@ -25,14 +25,25 @@ class AirportInfoPage:
         self.airport_select_wrapper = page.locator(
             "#airportSelectWrapper"
         )
-        self.airport_select = page.locator("#airportSelect-ts-control")
+
+
+        self.airport_select = page.locator("#airportSelect")
         self.airport_select_control = page.locator(
             "#airportSelect + .ts-wrapper .ts-control"
         )
+        self.airport_search = page.locator("#airportSelect-ts-control")
 
-        self.airport_search = page.locator(
-            "#airportSelect-ts-control"
-        )
+
+        # self.airport_select = page.locator("#airportSelect-ts-control")
+        # self.airport_select_control = page.locator(
+        #     "#airportSelect + .ts-wrapper .ts-control"
+        # )
+
+        # self.airport_select = page.locator("#airportSelect")
+
+        # self.airport_search = page.locator(
+        #     "#airportSelect-ts-control"
+        # )
         self.select_airport_button = page.get_by_role("button", name="Select Airport")
         # self.select_airport_button = page.get_by_text("Select Airport")
 
@@ -143,16 +154,23 @@ class AirportInfoPage:
         self.country_select.select_option(label=country)
         self.airport_select_wrapper.wait_for(state="visible")
         
-
     def select_airport(self, airport_name, airport_iata):
         self.airport_select_wrapper.wait_for(state="visible")
-        self.airport_select_control.click()
-        self.airport_search.fill(airport_name)
-        airport_option = self.page.locator(
-            f'[data-value="{airport_iata}"]'
-        )
-        airport_option.wait_for(state="visible")
-        airport_option.click()        # self.page.locator(f'[data-value="{airport_iata}"]').click()
+        self.airport_select.select_option(airport_iata)
+        
+    # def select_airport(self, airport_name, airport_iata):
+    #     self.airport_select_wrapper.wait_for(state="visible")
+    #     self.airport_select_control.click()
+    #     self.airport_search.fill(airport_name)
+    #     airport_option = self.page.locator(
+    #         f'[data-value="{airport_iata}"]'
+    #     )
+    #     airport_option.wait_for(state="visible")
+    #     airport_option.click()        # self.page.locator(f'[data-value="{airport_iata}"]').click()
+
+    #     # Verify Tom Select actually selected the airport
+    #     selected_value = self.page.locator("#airportSelect").input_value()
+    #     print("SELECTED AIRPORT VALUE:", selected_value)
 
 
     def generate_random_airport(self):
