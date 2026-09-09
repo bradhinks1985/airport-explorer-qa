@@ -12,7 +12,7 @@ def get_db_connection():
 
 
 
-
+# Airport Info page object model
 class AirportInfoPage:
     def __init__(self, page: Page):
         self.page = page
