@@ -36,28 +36,46 @@ jobs:
         run: |
           nohup python app.py > flask.log 2>&1 &
       
-      
+          
+          
       - name: Wait for Flask application
         run: |
           python - <<'PY'
           import time
           import urllib.request
-          url = "http://127.0.0"
+          from urllib.error import HTTPError, URLError
+
+          url = "http://127.0.0.1:5000/"
           max_attempts = 60
-          for _ in range(max_attempts):
-              try:
-                  urllib.request.urlopen(url)
-                  print("Flask application is ready.")
-                  time.sleep(2)
-                  break
-              except Exception:
-                  time.sleep(1)
+        
+          print("Starting Flask availability verification loop...")
+          for i in range(max_attempts):
+            try:
+                # Use a small timeout per request so it doesn't hang
+                urllib.request.urlopen(url, timeout=2)
+                print("Flask application is ready (Returned 200 OK).")
+                time.sleep(2)
+                break
+            except HTTPError as e:
+                # The server responded (e.g., 404, 403, 500), meaning Flask IS running
+                print(f"Flask application is alive but returned status code: {e.code}")
+                time.sleep(2)
+                break
+            except URLError as e:
+                # Connection refused or host unreachable (still starting up)
+                time.sleep(1)
           else:
-              print("Flask application did not start.")
-              with open("flask.log") as f:
-                  print(f.read())
-              raise SystemExit(1)
+            print("Flask application did not start within the timeout window.")
+            try:
+                with open("flask.log") as f:
+                    print("\n=== FLASK LOG OUTPUT ===")
+                    print(f.read())
+            except FileNotFoundError:
+                print("flask.log file could not be found.")
+            raise SystemExit(1)
           PY
+  
+          
 
 
       - name: Run tests
