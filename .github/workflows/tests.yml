@@ -36,27 +36,32 @@ jobs:
         run: |
           nohup python app.py > flask.log 2>&1 &
 
+
       - name: Wait for Flask application
-        run: |
-          python - <<'PY'
-          import time
-          import urllib.request
+   	run: |
+    	  python - <<'PY'
+    	  import time
+    	  import urllib.request
 
-          url = "http://127.0.0.1:5000/"
+    	  url = "http://127.0.0.1:5000/"
+    	  max_attempts = 60  # Increased from 30 to 60 seconds
 
-          for _ in range(30):
+    	  for _ in range(max_attempts):
               try:
-                  urllib.request.urlopen(url)
-                  print("Flask application is ready.")
-                  break
+           	  urllib.request.urlopen(url)
+            	  print("Flask application is ready.")
+            	  time.sleep(2)  # Add extra buffer after successful response
+            	  break
               except Exception:
-                  time.sleep(1)
-          else:
+            	  time.sleep(1)
+    	  else:
               print("Flask application did not start.")
               with open("flask.log") as f:
-                  print(f.read())
+            	  print(f.read())
               raise SystemExit(1)
-          PY
+    	  PY
+
+
 
       - name: Run tests
         run: |

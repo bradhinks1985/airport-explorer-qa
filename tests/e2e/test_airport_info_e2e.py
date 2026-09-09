@@ -16,8 +16,14 @@ def test_airport_info_complete_user_journey(page):
 
     page.wait_for_timeout(1000)
 
-    print("URL AFTER CLICK:", page.url)
-    page.locator("#loadingOverlay").wait_for(state="hidden")
+    # Wait for loading overlay to disappear before checking visibility
+    page.locator("#loadingOverlay").wait_for(state="hidden", timeout=60000)
+    
+    # Add explicit waits for cards to be visible before assertions
+    airport_page.airport_info.wait_for(state="visible", timeout=60000)
+    airport_page.domestic_routes_card.wait_for(state="visible", timeout=60000)
+    airport_page.international_routes_card.wait_for(state="visible", timeout=60000)
+    airport_page.airlines_destinations_card.wait_for(state="visible", timeout=60000)
 
     # Verify the major sections of the page are available
     assert airport_page.airport_info.is_visible()
