@@ -30,7 +30,7 @@ jobs:
 
       - name: Install Playwright browsers
         run: |
-          playwright install --with-deps chromium
+          playwright install chromium
 
       - name: Start Flask application
         run: |
