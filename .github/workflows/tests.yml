@@ -58,6 +58,14 @@ jobs:
               raise SystemExit(1)
           PY
 
-      - name: Run tests
+            - name: Run tests
         run: |
           pytest -v
+
+      - name: Upload Flask log
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: flask-log
+          path: flask.log
+          if-no-files-found: warn
