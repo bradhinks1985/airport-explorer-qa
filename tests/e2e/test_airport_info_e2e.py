@@ -13,6 +13,8 @@ def test_airport_info_complete_user_journey(page):
 
     airport_page.select_airport_button.click()
 
+    page.wait_for_url("**iata=DTW")
+
     page.locator("#loadingOverlay").wait_for(state="hidden")
 
     # Verify the major sections of the page are available
