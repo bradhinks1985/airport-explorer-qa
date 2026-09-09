@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +31,32 @@ jobs:
       - name: Install Playwright browsers
         run: |
           playwright install --with-deps chromium
+
+      - name: Start Flask application
+        run: |
+          nohup python app.py > flask.log 2>&1 &
+
+      - name: Wait for Flask application
+        run: |
+          python - <<'PY'
+          import time
+          import urllib.request
+
+          url = "http://127.0.0.1:5000/"
+
+          for _ in range(30):
+              try:
+                  urllib.request.urlopen(url)
+                  print("Flask application is ready.")
+                  break
+              except Exception:
+                  time.sleep(1)
+          else:
+              print("Flask application did not start.")
+              with open("flask.log") as f:
+                  print(f.read())
+              raise SystemExit(1)
+          PY
 
       - name: Run tests
         run: |
