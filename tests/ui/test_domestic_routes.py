@@ -13,8 +13,8 @@ def test_domestic_routes_has_data(page):
 
     airport_page.select_airport_button.click()
 
-    # Busiest international routes
-    if airport_page.international_routes_card.is_visible():
+    # Busiest domestic routes
+    if airport_page.domestic_routes_card.is_visible():
 
         # busiest domestic routes - first route
         airport_page.open_domestic_routes()
