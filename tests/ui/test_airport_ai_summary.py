@@ -12,8 +12,16 @@ def test_airport_ai_summary(page):
     #click generate random airport button
     airport_page.generate_random_airport()
 
+
+    print("AI SUMMARY URL:", airport_page.ai_summary_link.get_attribute("href"))
+
     # click ai summary link
     airport_page.view_ai_summary()
+
+
+    print("AI SUMMARY PAGE:", page.url)
+    print("HISTORY TEXT:", page.locator("#history").text_content())
+    print("HISTORY VISIBLE:", page.locator("#history").is_visible())
 
     # wait for history section to be visible
     page.locator("#history").wait_for(state="visible", timeout=60000)
