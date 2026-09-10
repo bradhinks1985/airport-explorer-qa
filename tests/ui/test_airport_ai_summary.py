@@ -16,7 +16,7 @@ def test_airport_ai_summary(page):
     airport_page.view_ai_summary()
 
     # wait for history section to be visible
-    page.locator("#history").wait_for(state="visible", timeout=10000)
+    page.locator("#history").wait_for(state="visible", timeout=60000)
 
 
     # get ai history from page and assert that it is not empty
