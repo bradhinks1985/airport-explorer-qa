@@ -33,8 +33,10 @@ jobs:
           playwright install chromium
 
       - name: Start Flask application
-        run: |
-          nohup python app.py > flask.log 2>&1 &
+        env:
+    	  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  	run: |
+    	  nohup python app.py > flask.log 2>&1 &
       
           
           
