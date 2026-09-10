@@ -34,12 +34,10 @@ jobs:
 
       - name: Start Flask application
         env:
-    	  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-    	  nohup python app.py > flask.log 2>&1 &
-      
-          
-          
+          nohup python app.py > flask.log 2>&1 &
+                  
       - name: Wait for Flask application
         run: |
           python - <<'PY'
@@ -77,9 +75,6 @@ jobs:
             raise SystemExit(1)
           PY
   
-          
-
-
       - name: Run tests
         run: |
           pytest -v
